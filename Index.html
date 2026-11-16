@@ -1,0 +1,317 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MedLinkQueue | ระบบจองคิวโรงพยาบาล</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f2f8fc;color:#19364d}
+header{background:linear-gradient(120deg,#087bb7,#39b9d5);color:white;padding:24px 16px;text-align:center}
+header h1{margin:0;font-size:28px}
+header p{margin:8px 0 0}
+nav{display:flex;justify-content:center;gap:12px;padding:16px;flex-wrap:wrap}
+button{border:0;border-radius:10px;padding:12px 18px;background:#0787c5;color:white;font-size:15px;cursor:pointer}
+button:hover{background:#056b9d}
+button:disabled{opacity:.5;cursor:not-allowed}
+button.secondary{background:#dceef7;color:#135476}
+button.danger{background:#d9534f}
+.container{max-width:1050px;margin:auto;padding:12px}
+.card{background:white;border-radius:16px;padding:22px;margin-bottom:18px;box-shadow:0 3px 15px #163d5b12}
+h2{color:#0878af;margin-top:0}
+label{display:block;font-weight:bold;margin:14px 0 6px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #c8dce8;border-radius:9px;font:inherit;background:white}
+textarea{min-height:90px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+.hidden{display:none}
+.ticket{text-align:center;background:#eaf8ff;border:2px dashed #25a1d0;border-radius:15px;padding:20px}
+.ticket strong{font-size:48px;color:#007db7}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.stat{background:white;border-radius:12px;padding:18px;text-align:center}
+.stat b{font-size:30px;color:#0787c5;display:block}
+.queue{border:1px solid #d7e8f1;border-radius:12px;padding:15px;margin:12px 0}
+.queue p{margin:7px 0;overflow-wrap:anywhere}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.tag{display:inline-block;border-radius:20px;background:#e4f3ff;padding:6px 12px;color:#096b9e;font-size:13px}
+.notice{background:#fff6df;padding:12px;border-radius:10px;color:#805a00;margin-bottom:18px}
+footer{text-align:center;padding:25px;color:#6d8797;font-size:13px}
+@media(max-width:600px){
+.grid{grid-template-columns:1fr}
+.stats{gap:6px}
+.stat{padding:12px 5px;font-size:12px}
+.stat b{font-size:24px}
+.card{padding:16px}
+header h1{font-size:24px}
+button{font-size:14px}
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>💙 MedLinkQueue</h1>
+<p>ระบบจองคิวโรงพยาบาลบ้านบึง</p>
+<p>สะดวก รวดเร็ว ลดระยะเวลารอคอย</p>
+</header>
+
+<nav>
+<button onclick="showPage('patient')">👤 สำหรับผู้ป่วย</button>
+<button onclick="showPage('doctor')">🩺 สำหรับแพทย์</button>
+</nav>
+
+<main class="container">
+<div class="notice">
+ระบบต้นแบบสำหรับสาธิตเท่านั้น กรุณาใช้ข้อมูลสมมติ
+ข้อมูลไม่ได้เชื่อมต่อกับระบบโรงพยาบาลจริง
+</div>
+
+<section id="patient">
+<div class="card">
+<h2>📋 ลงทะเบียนจองคิว</h2>
+<form id="bookingForm">
+<div class="grid">
+<div>
+<label>ชื่อ-นามสกุล</label>
+<input id="name" required placeholder="ชื่อผู้ป่วยสมมติ">
+</div>
+<div>
+<label>อายุ</label>
+<input id="age" type="number" min="1" max="120" required>
+</div>
+<div>
+<label>แผนกที่ต้องการตรวจ</label>
+<select id="department" required>
+<option value="">เลือกแผนก</option>
+<option>อายุรกรรม</option>
+<option>ศัลยกรรม</option>
+<option>กุมารเวชกรรม</option>
+<option>ทันตกรรม</option>
+<option>ตรวจโรคทั่วไป</option>
+</select>
+</div>
+<div>
+<label>วันที่ต้องการเข้ารับบริการ</label>
+<input id="date" type="date" required>
+</div>
+</div>
+<label>อาการเบื้องต้น</label>
+<textarea id="symptoms" required placeholder="ระบุอาการสมมติ"></textarea>
+<br><br>
+<button type="submit">ยืนยันการจองคิว</button>
+</form>
+</div>
+
+<div class="card hidden" id="ticketCard">
+<h2>✅ จองคิวสำเร็จ</h2>
+<div class="ticket">
+<p>หมายเลขคิวของคุณ</p>
+<strong id="ticketNumber"></strong>
+<p id="ticketDetails"></p>
+<span class="tag">รอเรียกคิว</span>
+</div>
+</div>
+
+<div class="card">
+<h2>🔎 ตรวจสอบสถานะคิว</h2>
+<label>กรอกหมายเลขคิว</label>
+<input id="searchNumber" placeholder="เช่น B001">
+<br><br>
+<button onclick="searchQueue()">ตรวจสอบคิว</button>
+<div id="searchResult"></div>
+</div>
+</section>
+
+<section id="doctor" class="hidden">
+<div class="card">
+<h2>🩺 ระบบจัดการคิวสำหรับแพทย์</h2>
+<p>แสดงข้อมูลการจองและสถานะการเข้ารับบริการ</p>
+<div class="notice">
+หน้าจอนี้เป็นตัวอย่าง ยังไม่มีระบบยืนยันตัวตน
+และไม่ควรใช้กับข้อมูลผู้ป่วยจริง
+</div>
+<label>เลือกแผนก</label>
+<select id="filterDepartment" onchange="renderDoctor()">
+<option value="">ทุกแผนก</option>
+<option>อายุรกรรม</option>
+<option>ศัลยกรรม</option>
+<option>กุมารเวชกรรม</option>
+<option>ทันตกรรม</option>
+<option>ตรวจโรคทั่วไป</option>
+</select>
+</div>
+
+<div class="stats">
+<div class="stat">คิวทั้งหมด<b id="total">0</b></div>
+<div class="stat">รอเรียก<b id="waiting">0</b></div>
+<div class="stat">เสร็จสิ้น<b id="completed">0</b></div>
+</div>
+
+<div class="card">
+<h2>📑 รายชื่อผู้ป่วย</h2>
+<div id="queueList"></div>
+</div>
+</section>
+</main>
+
+<footer>
+MedLinkQueue © 2026 | ระบบต้นแบบเพื่อการศึกษา
+</footer>
+
+<script>
+const STORAGE_KEY="medlinkqueue_demo_v1";
+
+function getQueues(){
+try{
+const data=JSON.parse(localStorage.getItem(STORAGE_KEY));
+return Array.isArray(data)?data:[];
+}catch(e){return []}
+}
+
+function saveQueues(data){
+localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+}
+
+function showPage(page){
+document.getElementById("patient").classList.toggle("hidden",page!=="patient");
+document.getElementById("doctor").classList.toggle("hidden",page!=="doctor");
+if(page==="doctor")renderDoctor();
+window.scrollTo(0,0);
+}
+
+function safe(value){
+return String(value).replace(/[&<>"']/g,c=>({
+"&":"&amp;","<":"&lt;",">":"&gt;",
+'"':"&quot;","'":"&#39;"
+})[c]);
+}
+
+function nextQueueNumber(data){
+const max=data.reduce((m,q)=>{
+const n=Number(String(q.number).replace(/^B/,""));
+return Math.max(m,Number.isFinite(n)?n:0);
+},0);
+return "B"+String(max+1).padStart(3,"0");
+}
+
+const dateInput=document.getElementById("date");
+const today=new Date();
+const localDate=new Date(today.getTime()-today.getTimezoneOffset()*60000)
+.toISOString().slice(0,10);
+dateInput.min=localDate;
+dateInput.value=localDate;
+
+document.getElementById("bookingForm").addEventListener("submit",function(e){
+e.preventDefault();
+
+const data=getQueues();
+const booking={
+id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),
+number:nextQueueNumber(data),
+name:document.getElementById("name").value.trim(),
+age:document.getElementById("age").value,
+department:document.getElementById("department").value,
+date:dateInput.value,
+symptoms:document.getElementById("symptoms").value.trim(),
+status:"รอเรียกคิว"
+};
+
+if(!booking.name||!booking.symptoms||booking.date<localDate){
+alert("กรุณาตรวจสอบข้อมูลการจอง");
+return;
+}
+
+data.push(booking);
+saveQueues(data);
+
+document.getElementById("ticketNumber").textContent=booking.number;
+document.getElementById("ticketDetails").textContent=
+booking.department+" | "+booking.date;
+document.getElementById("ticketCard").classList.remove("hidden");
+document.getElementById("bookingForm").reset();
+dateInput.value=localDate;
+document.getElementById("ticketCard").scrollIntoView({behavior:"smooth"});
+});
+
+function searchQueue(){
+const number=document.getElementById("searchNumber").value.trim().toUpperCase();
+const result=document.getElementById("searchResult");
+const queue=getQueues().find(q=>q.number===number);
+if(!queue){
+result.innerHTML="<p>ไม่พบหมายเลขคิวนี้ในเครื่อง</p>";
+return;
+}
+result.innerHTML=`
+<div class="queue">
+<p><b>หมายเลข:</b> ${safe(queue.number)}</p>
+<p><b>แผนก:</b> ${safe(queue.department)}</p>
+<p><b>วันที่:</b> ${safe(queue.date)}</p>
+<p><b>สถานะ:</b> ${safe(queue.status)}</p>
+</div>`;
+}
+
+function changeStatus(id,status){
+const data=getQueues();
+const q=data.find(item=>item.id===id);
+if(!q)return;
+q.status=status;
+saveQueues(data);
+renderDoctor();
+}
+
+function renderDoctor(){
+const all=getQueues();
+const filter=document.getElementById("filterDepartment").value;
+const data=all.filter(q=>!filter||q.department===filter);
+
+document.getElementById("total").textContent=data.length;
+document.getElementById("waiting").textContent=
+data.filter(q=>q.status==="รอเรียกคิว").length;
+document.getElementById("completed").textContent=
+data.filter(q=>q.status==="เสร็จสิ้น").length;
+
+const list=document.getElementById("queueList");
+list.innerHTML="";
+if(!data.length){
+list.textContent="ยังไม่มีรายการจองคิว";
+return;
+}
+
+data.forEach(q=>{
+const card=document.createElement("div");
+card.className="queue";
+card.innerHTML=`
+<h3>คิว ${safe(q.number)}</h3>
+<p><b>ชื่อ:</b> ${safe(q.name)}</p>
+<p><b>อายุ:</b> ${safe(q.age)} ปี</p>
+<p><b>แผนก:</b> ${safe(q.department)}</p>
+<p><b>วันที่:</b> ${safe(q.date)}</p>
+<p><b>อาการ:</b> ${safe(q.symptoms)}</p>
+<p><b>สถานะ:</b> <span class="tag">${safe(q.status)}</span></p>
+<div class="actions"></div>`;
+
+const actions=card.querySelector(".actions");
+[
+["เรียกคิว","กำลังตรวจ"],
+["ตรวจเสร็จ","เสร็จสิ้น"],
+["ยกเลิก","ยกเลิก"]
+].forEach(([label,status])=>{
+const btn=document.createElement("button");
+btn.textContent=label;
+if(status==="ยกเลิก")btn.className="danger";
+btn.disabled=q.status==="เสร็จสิ้น"||q.status==="ยกเลิก";
+btn.onclick=()=>changeStatus(q.id,status);
+actions.appendChild(btn);
+});
+list.appendChild(card);
+});
+}
+
+window.addEventListener("storage",()=>{
+renderDoctor();
+const n=document.getElementById("searchNumber").value.trim();
+if(n)searchQueue();
+});
+</script>
+</body>
+</html>
