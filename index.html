@@ -3,711 +3,1057 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MedLinkQueue | โรงพยาบาลบ้านบึง</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MedLinkQueue | ระบบจองคิวโรงพยาบาล</title>
 <style>
 :root{
-  --blue:#087db5;
-  --light:#e9f7fd;
-  --dark:#17394f;
+  --blue:#087fb9;
+  --dark:#075e8c;
+  --cyan:#29b9d3;
+  --bg:#f2f8fc;
+  --text:#193b50;
+  --muted:#708899;
+  --line:#dceaf2;
+  --green:#15966b;
+  --red:#d04455;
 }
 *{box-sizing:border-box}
 body{
   margin:0;
+  background:var(--bg);
+  color:var(--text);
   font-family:system-ui,"Noto Sans Thai",sans-serif;
-  background:#f2f8fc;
-  color:var(--dark);
+  line-height:1.65;
 }
-header{
-  background:linear-gradient(120deg,#087db5,#35b9d5);
-  color:white;
-  padding:20px;
-}
-.topbar{
-  max-width:1100px;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  flex-wrap:wrap;
-}
-.logo{font-size:26px;font-weight:800}
-nav{display:flex;gap:8px;flex-wrap:wrap}
+button,input,select,textarea{font:inherit}
 button{
+  border:0;
   background:var(--blue);
   color:white;
-  border:0;
+  padding:11px 17px;
   border-radius:10px;
-  padding:12px 17px;
-  font:inherit;
+  font-weight:600;
   cursor:pointer;
 }
-button:disabled{opacity:.5;cursor:default}
-nav button{background:#ffffff28;border:1px solid #ffffff55}
-.container{max-width:1100px;margin:auto;padding:20px 15px}
-.hero{
-  background:linear-gradient(120deg,#e0f6ff,#fff);
-  border-radius:20px;
-  padding:35px 25px;
-  margin-bottom:20px;
+button:hover{filter:brightness(.93)}
+button:disabled{opacity:.5;cursor:not-allowed}
+button.secondary{background:#e1f2fb;color:var(--dark)}
+button.danger{background:var(--red)}
+button.green{background:var(--green)}
+header{
+  background:linear-gradient(110deg,#087db7,#2bb8d1);
+  color:white;
+  padding:15px;
 }
-.hero h1{font-size:32px;margin:0 0 12px}
-.hero p{line-height:1.8}
-.cards{
+.top{
+  max-width:1150px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+}
+.logo{font-size:25px;font-weight:800}
+.logo small{display:block;font-size:12px;font-weight:400}
+nav{display:flex;flex-wrap:wrap;gap:7px}
+nav button{
+  background:#ffffff24;
+  border:1px solid #ffffff50;
+  padding:9px 12px;
+}
+main{
+  max-width:1150px;
+  min-height:75vh;
+  margin:auto;
+  padding:20px 14px;
+}
+.hidden{display:none!important}
+.hero{
+  padding:38px 30px;
+  background:linear-gradient(115deg,#ddf4ff,#fff);
+  border-radius:20px;
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:1.5fr 1fr;
+  align-items:center;
+  gap:20px;
+}
+.hero h1{
+  font-size:clamp(25px,4vw,39px);
+  line-height:1.3;
+  margin:0 0 14px;
+  color:#086c9d;
+}
+.hero-icon{text-align:center;font-size:100px}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
   gap:15px;
 }
+.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
 .card{
   background:white;
   border-radius:16px;
   padding:22px;
-  margin-bottom:18px;
-  box-shadow:0 4px 18px #123b5512;
+  margin-bottom:17px;
+  box-shadow:0 5px 20px #1746630d;
 }
-.cards .card{margin:0}
 .card h2,.card h3{color:var(--blue);margin-top:0}
-.icon{font-size:34px}
-label{display:block;margin:14px 0 6px;font-weight:600}
+.form-card{max-width:500px;margin:25px auto}
+label{display:block;font-weight:600;margin:13px 0 6px}
 input,select,textarea{
+  display:block;
   width:100%;
   padding:12px;
-  border:1px solid #c4dce8;
-  border-radius:9px;
+  border:1px solid var(--line);
+  border-radius:10px;
   background:white;
-  font:inherit;
+  color:var(--text);
 }
-textarea{min-height:95px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
-.hidden{display:none!important}
-.notice{
-  background:#fff3d7;
-  border-radius:10px;
-  padding:13px;
-  margin-bottom:18px;
+textarea{min-height:90px;resize:vertical}
+input:focus,select:focus,textarea:focus{
+  outline:2px solid #29b9d366;
 }
-.message{
-  background:#e1f7e9;
-  padding:13px;
-  border-radius:10px;
-  margin-bottom:15px;
-  white-space:pre-wrap;
+.full{width:100%;margin-top:18px}
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
 }
-.error{background:#ffe5e5}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.badge{
+  display:inline-block;
+  padding:5px 11px;
+  border-radius:20px;
+  background:#e0f3fb;
+  color:#087db7;
+  font-size:13px;
+  font-weight:600;
+}
 .item{
-  border:1px solid #d5e6f0;
+  border:1px solid var(--line);
   border-radius:12px;
   padding:16px;
   margin:12px 0;
   overflow-wrap:anywhere;
 }
-.row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:10px;
+.item p{margin:6px 0}
+.muted{color:var(--muted)}
+.notice{
+  padding:12px 15px;
+  background:#fff2d5;
+  color:#775813;
+  border-radius:10px;
+  margin-bottom:18px;
 }
-.tag{
-  display:inline-block;
-  padding:6px 12px;
-  border-radius:30px;
-  background:#e0f3fc;
-  color:#0876ac;
+.message{
+  padding:12px 15px;
+  background:#def7e8;
+  color:#12633e;
+  border-radius:10px;
+  margin-bottom:18px;
 }
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.danger{background:#c43c4e}
-.muted{color:#658092}
-footer{text-align:center;padding:25px;color:#789}
+.message.error{background:#ffe3e6;color:#a02436}
+.dashboard-head{
+  background:linear-gradient(110deg,#087fb9,#31b9d2);
+  color:white;
+  padding:24px;
+  border-radius:16px;
+  margin-bottom:18px;
+}
+.dashboard-head h2{margin:0}
+.stat{
+  background:white;
+  border-radius:14px;
+  padding:19px;
+  text-align:center;
+}
+.stat strong{
+  display:block;
+  color:var(--blue);
+  font-size:30px;
+}
+.center{text-align:center}
+.empty{padding:25px;text-align:center;color:var(--muted)}
+footer{
+  text-align:center;
+  padding:25px;
+  color:#7891a1;
+  background:#e6f2f9;
+}
 @media(max-width:700px){
-  .cards,.grid{grid-template-columns:1fr}
-  .hero{padding:23px}
-  .hero h1{font-size:25px}
+  .hero{grid-template-columns:1fr;padding:24px}
+  .hero-icon{display:none}
+  .grid,.grid.two{grid-template-columns:1fr}
   .card{padding:17px}
-  .logo{font-size:23px}
+  .logo{font-size:22px}
+  nav button{font-size:12px;padding:8px}
 }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="topbar">
-    <div>
-      <div class="logo">💙 MedLinkQueue</div>
+  <div class="top">
+    <div class="logo">
+      💙 MedLinkQueue
       <small>ระบบจองคิวโรงพยาบาลบ้านบึง</small>
     </div>
     <nav>
-      <button data-page="home">หน้าหลัก</button>
-      <button data-page="dashboard" class="logged hidden">แดชบอร์ด</button>
-      <button data-page="login" class="guest">เข้าสู่ระบบ</button>
-      <button data-page="register" class="guest">สมัครสมาชิก</button>
-      <button id="logout" class="logged hidden">ออกจากระบบ</button>
+      <button onclick="go('home')">หน้าหลัก</button>
+      <button id="navDash" class="hidden"
+        onclick="go('dashboard')">แดชบอร์ด</button>
+      <button id="navLogin" onclick="go('login')">เข้าสู่ระบบ</button>
+      <button id="navRegister" onclick="go('register')">สมัครสมาชิก</button>
+      <button id="navLogout" class="hidden"
+        onclick="logout()">ออกจากระบบ</button>
     </nav>
   </div>
 </header>
 
-<main class="container">
-
-<div class="notice">
-⚠️ ระบบต้นแบบเพื่อการศึกษา ใช้ข้อมูลสมมติเท่านั้น
-ยังไม่ใช่ระบบที่ได้รับอนุญาตให้จัดเก็บข้อมูลผู้ป่วยจริง
-</div>
-
-<div id="flash" class="message hidden" role="status"></div>
-
-<!-- HOME -->
-<section id="home" class="page">
-  <div class="hero">
-    <h1>ยินดีต้อนรับสู่ MedLinkQueue</h1>
-    <p>
-      ระบบจัดการคิวอัจฉริยะสำหรับโรงพยาบาลบ้านบึง
-      ช่วยให้การจองคิวสะดวก รวดเร็ว และตรวจสอบสถานะได้ออนไลน์
-    </p>
-    <button data-page="dashboard">เริ่มใช้งานระบบ</button>
+<main>
+  <div class="notice">
+    ⚠️ ระบบสาธิตเพื่อการศึกษา ใช้ข้อมูลสมมติเท่านั้น
+    ข้อมูลถูกเก็บไว้ในเบราว์เซอร์เครื่องนี้
   </div>
+  <div id="flash" class="message hidden" role="status"></div>
 
-  <div class="cards">
-    <div class="card">
-      <div class="icon">📅</div>
-      <h3>จองคิวออนไลน์</h3>
-      <p>เลือกแผนกและวันที่ต้องการเข้ารับบริการ</p>
-      <button data-page="dashboard">จองคิว</button>
+  <!-- HOME -->
+  <section id="home">
+    <div class="hero">
+      <div>
+        <h1>ยินดีต้อนรับสู่ MedLinkQueue</h1>
+        <p>
+          ระบบจองคิวโรงพยาบาลออนไลน์
+          จองคิวได้สะดวก ตรวจสอบสถานะ
+          และช่วยลดระยะเวลารอคอย
+        </p>
+        <button onclick="go('dashboard')">
+          เริ่มจองคิวออนไลน์
+        </button>
+      </div>
+      <div class="hero-icon">🏥</div>
     </div>
-    <div class="card">
-      <div class="icon">🔎</div>
-      <h3>ตรวจสอบสถานะ</h3>
-      <p>ติดตามคิวและประวัติการจองของคุณ</p>
-      <button data-page="dashboard">ตรวจสอบ</button>
+
+    <div class="grid" style="margin-top:20px">
+      <div class="card">
+        <h3>📅 จองคิวออนไลน์</h3>
+        <p>เลือกแผนกและวันที่ต้องการรับบริการ</p>
+        <button onclick="go('dashboard')">จองคิว</button>
+      </div>
+      <div class="card">
+        <h3>🔎 ตรวจสอบสถานะ</h3>
+        <p>ติดตามสถานะคิวและประวัติการจอง</p>
+        <button onclick="go('dashboard')">ตรวจสอบ</button>
+      </div>
+      <div class="card">
+        <h3>🩺 สำหรับแพทย์</h3>
+        <p>ดูรายชื่อผู้ป่วยและจัดการสถานะคิว</p>
+        <button onclick="go('login')">เข้าสู่ระบบ</button>
+      </div>
     </div>
+
     <div class="card">
-      <div class="icon">🩺</div>
-      <h3>สำหรับบุคลากร</h3>
-      <p>แพทย์และผู้ดูแลจัดการคิวตามสิทธิ์บัญชี</p>
-      <button data-page="login">เข้าสู่ระบบ</button>
+      <h3>📢 ประกาศ</h3>
+      <p>
+        เว็บไซต์นี้เป็นต้นแบบระบบจองคิวโรงพยาบาล
+        ไม่ใช่ระบบของโรงพยาบาลจริง
+      </p>
     </div>
-  </div>
+  </section>
 
-  <div class="card" style="margin-top:20px">
-    <h3>📢 ประกาศ</h3>
-    <p>เว็บไซต์นี้เป็นตัวอย่างโครงงาน ยังไม่ได้เชื่อมต่อกับโรงพยาบาลจริง</p>
-  </div>
-</section>
+  <!-- LOGIN -->
+  <section id="login" class="hidden">
+    <div class="card form-card">
+      <h2 class="center">🔐 เข้าสู่ระบบ</h2>
+      <form id="loginForm">
+        <label for="loginUser">Username</label>
+        <input id="loginUser"
+          autocomplete="username" required
+          placeholder="กรอกชื่อผู้ใช้">
 
-<!-- LOGIN -->
-<section id="login" class="page hidden">
-  <div class="card">
-    <h2>🔐 เข้าสู่ระบบ</h2>
-    <form id="loginForm">
-      <label>อีเมล</label>
-      <input id="loginEmail" type="email" autocomplete="email" required>
-      <label>รหัสผ่าน</label>
-      <input id="loginPassword" type="password" autocomplete="current-password" required>
-      <p><button type="submit">เข้าสู่ระบบ</button></p>
-    </form>
-    <p>ยังไม่มีบัญชี?</p>
-    <button data-page="register">สมัครสมาชิก</button>
-  </div>
-</section>
+        <label for="loginPass">Password</label>
+        <input id="loginPass" type="password"
+          autocomplete="current-password" required
+          placeholder="กรอกรหัสผ่าน">
 
-<!-- REGISTER -->
-<section id="register" class="page hidden">
-  <div class="card">
-    <h2>📝 สมัครสมาชิกผู้ป่วย</h2>
-    <form id="registerForm">
-      <label>ชื่อที่ใช้แสดง (ชื่อสมมติ)</label>
-      <input id="regName" maxlength="70" required>
-      <label>อีเมล</label>
-      <input id="regEmail" type="email" autocomplete="email" required>
-      <label>รหัสผ่านอย่างน้อย 8 ตัวอักษร</label>
-      <input id="regPassword" type="password" minlength="8" autocomplete="new-password" required>
-      <p><button type="submit">สมัครสมาชิก</button></p>
-    </form>
-    <p class="muted">
-      สมาชิกใหม่ได้รับสิทธิ์ผู้ป่วยเท่านั้น
-      บัญชีแพทย์ต้องได้รับสิทธิ์จากผู้ดูแลระบบ
-    </p>
-  </div>
-</section>
-
-<!-- DASHBOARD -->
-<section id="dashboard" class="page hidden">
-  <div class="card">
-    <div class="row">
-      <h2>แดชบอร์ด</h2>
-      <span id="identity" class="tag"></span>
-    </div>
-    <p id="welcome"></p>
-  </div>
-
-  <!-- PATIENT -->
-  <div id="patientPanel" class="hidden">
-    <div class="card">
-      <h2>📅 จองคิวใหม่</h2>
-      <form id="bookingForm">
-        <div class="grid">
-          <div>
-            <label>เลือกแผนก</label>
-            <select id="dept" required>
-              <option value="">-- เลือกแผนก --</option>
-              <option>ตรวจโรคทั่วไป</option>
-              <option>อายุรกรรม</option>
-              <option>ศัลยกรรม</option>
-              <option>กุมารเวชกรรม</option>
-              <option>ทันตกรรม</option>
-            </select>
-          </div>
-          <div>
-            <label>วันที่ต้องการเข้ารับบริการ</label>
-            <input id="visitDate" type="date" required>
-          </div>
-        </div>
-        <label>หมายเหตุ (ใช้ข้อมูลสมมติ)</label>
-        <textarea id="note" maxlength="300"></textarea>
-        <p><button type="submit">ยืนยันการจอง</button></p>
+        <button class="full" type="submit">เข้าสู่ระบบ</button>
       </form>
+      <p class="center">
+        ยังไม่มีบัญชี?
+        <button class="secondary"
+          onclick="go('register')">สมัครสมาชิก</button>
+      </p>
     </div>
-    <div class="card">
-      <h2>📋 รายการจองของฉัน</h2>
-      <div id="myAppointments"></div>
-    </div>
-  </div>
+  </section>
 
-  <!-- DOCTOR -->
-  <div id="doctorPanel" class="hidden">
-    <div class="card">
-      <h2>🩺 ระบบสำหรับแพทย์</h2>
-      <p id="doctorDept"></p>
-      <div id="doctorAppointments"></div>
-    </div>
-  </div>
+  <!-- REGISTER -->
+  <section id="register" class="hidden">
+    <div class="card form-card">
+      <h2 class="center">📝 สมัครสมาชิก</h2>
+      <form id="registerForm">
+        <label>ชื่อแสดงผล (ชื่อสมมติ)</label>
+        <input id="regName" maxlength="60" required>
 
-  <!-- ADMIN -->
-  <div id="adminPanel" class="hidden">
-    <div class="card">
-      <h2>🛡️ จัดการบัญชีผู้ใช้</h2>
-      <div id="userList"></div>
-    </div>
-    <div class="card">
-      <h2>📊 คิวทั้งหมด</h2>
-      <div id="adminAppointments"></div>
-    </div>
-  </div>
-</section>
+        <label>Username</label>
+        <input id="regUser"
+          minlength="4" maxlength="24"
+          autocomplete="username"
+          placeholder="a-z, 0-9 และ _" required>
 
+        <label>Password</label>
+        <input id="regPass" type="password"
+          minlength="8" autocomplete="new-password" required>
+
+        <label>ยืนยัน Password</label>
+        <input id="regConfirm" type="password"
+          minlength="8" autocomplete="new-password" required>
+
+        <button class="full" type="submit">สมัครสมาชิก</button>
+      </form>
+      <p class="muted">
+        สมาชิกใหม่จะเป็นผู้ป่วยโดยอัตโนมัติ
+        บัญชีแพทย์และ Admin มีไว้สำหรับการทดสอบ
+      </p>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="dashboard" class="hidden">
+    <div class="dashboard-head">
+      <div class="row">
+        <h2>แดชบอร์ด</h2>
+        <span id="roleBadge" class="badge"></span>
+      </div>
+      <p id="welcome"></p>
+    </div>
+
+    <!-- PATIENT -->
+    <div id="patientPanel" class="hidden">
+      <div class="card">
+        <h2>📅 จองคิวใหม่</h2>
+        <form id="bookingForm">
+          <div class="grid two">
+            <div>
+              <label>เลือกแผนก</label>
+              <select id="department" required>
+                <option value="">เลือกแผนก</option>
+                <option>ตรวจโรคทั่วไป</option>
+                <option>อายุรกรรม</option>
+                <option>ศัลยกรรม</option>
+                <option>กุมารเวชกรรม</option>
+                <option>ทันตกรรม</option>
+              </select>
+            </div>
+            <div>
+              <label>วันที่เข้ารับบริการ</label>
+              <input id="visitDate" type="date" required>
+            </div>
+          </div>
+          <label>หมายเหตุ (ข้อมูลสมมติ)</label>
+          <textarea id="note" maxlength="300"></textarea>
+          <button class="full" type="submit">
+            ยืนยันการจองคิว
+          </button>
+        </form>
+      </div>
+      <div class="card">
+        <h2>📋 คิวและประวัติของฉัน</h2>
+        <div id="patientList"></div>
+      </div>
+    </div>
+
+    <!-- DOCTOR -->
+    <div id="doctorPanel" class="hidden">
+      <div class="card">
+        <h2>🩺 รายการคิวสำหรับแพทย์</h2>
+        <p id="doctorDept"></p>
+        <div id="doctorList"></div>
+      </div>
+    </div>
+
+    <!-- ADMIN -->
+    <div id="adminPanel" class="hidden">
+      <div class="grid">
+        <div class="stat">
+          คิวทั้งหมด
+          <strong id="totalCount">0</strong>
+        </div>
+        <div class="stat">
+          รอเรียก
+          <strong id="waitingCount">0</strong>
+        </div>
+        <div class="stat">
+          เสร็จสิ้น
+          <strong id="doneCount">0</strong>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:18px">
+        <h2>👥 จัดการบัญชี</h2>
+        <div id="usersList"></div>
+      </div>
+
+      <div class="card">
+        <h2>📊 คิวทั้งหมด</h2>
+        <div id="adminList"></div>
+      </div>
+
+      <div class="card">
+        <h2>⚙️ ข้อมูลทดสอบ</h2>
+        <p class="muted">
+          ล้างรายการจองทั้งหมดในเบราว์เซอร์เครื่องนี้
+        </p>
+        <button class="danger" onclick="clearBookings()">
+          ล้างข้อมูลคิว
+        </button>
+      </div>
+    </div>
+  </section>
 </main>
 
-<footer>MedLinkQueue © 2026 | โครงงานเพื่อการศึกษา</footer>
+<footer>
+  MedLinkQueue © 2026 | โครงงานเพื่อการศึกษา
+</footer>
 
-<script type="module">
-import {initializeApp} from
-"https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+<script>
+"use strict";
 
-import {
-  getAuth,
-  onAuthStateChanged,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  updateProfile
-} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+// ========================================
+// DEMO STORAGE
+// ========================================
 
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
-  collection,
-  query,
-  where,
-  onSnapshot,
-  addDoc,
-  updateDoc,
-  serverTimestamp,
-  limit
-} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+const USERS_KEY="medlink_demo_users_v1";
+const BOOKINGS_KEY="medlink_demo_bookings_v1";
+const SESSION_KEY="medlink_demo_session_v1";
 
-// ใส่ Firebase Config ของคุณตรงนี้
-const firebaseConfig = {
-  apiKey: "PASTE_API_KEY",
-  authDomain: "PASTE_PROJECT_ID.firebaseapp.com",
-  projectId: "PASTE_PROJECT_ID",
-  appId: "PASTE_APP_ID"
+const $=id=>document.getElementById(id);
+
+const departments=[
+  "ตรวจโรคทั่วไป",
+  "อายุรกรรม",
+  "ศัลยกรรม",
+  "กุมารเวชกรรม",
+  "ทันตกรรม"
+];
+
+const statusNames={
+  waiting:"รอเรียกคิว",
+  called:"เรียกคิวแล้ว",
+  examining:"กำลังตรวจ",
+  completed:"เสร็จสิ้น",
+  cancelled:"ยกเลิก"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+// บัญชีสาธิตเท่านั้น
+// ห้ามใช้รหัสผ่านจริงหรือข้อมูลส่วนตัวจริง
+const demoUsers=[
+  {
+    id:"demo-admin",
+    name:"ผู้ดูแลระบบ",
+    username:"admin",
+    password:"Admin1234",
+    role:"admin",
+    department:null
+  },
+  {
+    id:"demo-doctor",
+    name:"แพทย์ทดสอบ",
+    username:"doctor",
+    password:"Doctor1234",
+    role:"doctor",
+    department:"ตรวจโรคทั่วไป"
+  },
+  {
+    id:"demo-patient",
+    name:"ผู้ป่วยทดสอบ",
+    username:"patient",
+    password:"Patient1234",
+    role:"patient",
+    department:null
+  }
+];
 
-const $ = id => document.getElementById(id);
-
-let currentUser = null;
-let profile = null;
-let unsubs = [];
-let authVersion = 0;
-
-function message(text,error=false){
-  const el=$("flash");
-  el.textContent=text;
-  el.className="message"+(error?" error":"");
-  el.scrollIntoView({behavior:"smooth",block:"nearest"});
+function readJSON(key,fallback){
+  try{
+    const raw=localStorage.getItem(key);
+    return raw?JSON.parse(raw):fallback;
+  }catch{
+    return fallback;
+  }
 }
 
-function clearMessage(){
-  $("flash").classList.add("hidden");
+function getUsers(){
+  const users=readJSON(USERS_KEY,[]);
+  return Array.isArray(users)?users:[];
 }
 
-function page(name){
-  clearMessage();
-  if(name==="dashboard"&&!currentUser)name="login";
-  document.querySelectorAll(".page").forEach(el=>{
-    el.classList.toggle("hidden",el.id!==name);
+function saveUsers(users){
+  localStorage.setItem(USERS_KEY,JSON.stringify(users));
+}
+
+function getBookings(){
+  const bookings=readJSON(BOOKINGS_KEY,[]);
+  return Array.isArray(bookings)?bookings:[];
+}
+
+function saveBookings(bookings){
+  localStorage.setItem(
+    BOOKINGS_KEY,
+    JSON.stringify(bookings)
+  );
+}
+
+function initializeDemo(){
+  const users=getUsers();
+  for(const demo of demoUsers){
+    if(!users.some(u=>u.id===demo.id)){
+      users.push({...demo});
+    }
+  }
+  saveUsers(users);
+}
+
+function currentUser(){
+  const id=sessionStorage.getItem(SESSION_KEY);
+  return getUsers().find(u=>u.id===id)||null;
+}
+
+function uid(){
+  if(crypto.randomUUID)return crypto.randomUUID();
+  return Date.now().toString(36)+
+    Math.random().toString(36).slice(2);
+}
+
+function today(){
+  const now=new Date();
+  const local=new Date(
+    now.getTime()-now.getTimezoneOffset()*60000
+  );
+  return local.toISOString().slice(0,10);
+}
+
+function notify(message,error=false){
+  const box=$("flash");
+  box.textContent=message;
+  box.className="message"+(error?" error":"");
+  box.scrollIntoView({
+    behavior:"smooth",
+    block:"nearest"
   });
+}
+
+function go(page){
+  $("flash").classList.add("hidden");
+
+  if(page==="dashboard"&&!currentUser()){
+    page="login";
+  }
+
+  document.querySelectorAll("main section").forEach(el=>{
+    if(["home","login","register","dashboard"].includes(el.id)){
+      el.classList.toggle("hidden",el.id!==page);
+    }
+  });
+
+  if(page==="dashboard")renderDashboard();
   window.scrollTo(0,0);
 }
 
-document.querySelectorAll("[data-page]").forEach(btn=>{
-  btn.addEventListener("click",()=>page(btn.dataset.page));
+function updateNav(){
+  const logged=!!currentUser();
+  $("navDash").classList.toggle("hidden",!logged);
+  $("navLogout").classList.toggle("hidden",!logged);
+  $("navLogin").classList.toggle("hidden",logged);
+  $("navRegister").classList.toggle("hidden",logged);
+}
+
+function login(event){
+  event.preventDefault();
+
+  const username=$("loginUser").value.trim().toLowerCase();
+  const password=$("loginPass").value;
+
+  const user=getUsers().find(u=>
+    u.username===username&&u.password===password
+  );
+
+  if(!user){
+    notify("Username หรือ Password ไม่ถูกต้อง",true);
+    return;
+  }
+
+  sessionStorage.setItem(SESSION_KEY,user.id);
+  $("loginPass").value="";
+  updateNav();
+  go("dashboard");
+  notify("เข้าสู่ระบบสำเร็จ");
+}
+
+function register(event){
+  event.preventDefault();
+
+  const name=$("regName").value.trim();
+  const username=$("regUser").value.trim().toLowerCase();
+  const password=$("regPass").value;
+  const confirm=$("regConfirm").value;
+
+  if(!name){
+    notify("กรุณากรอกชื่อ",true);
+    return;
+  }
+
+  if(!/^[a-z0-9_]{4,24}$/.test(username)){
+    notify(
+      "Username ต้องมี 4-24 ตัว ใช้ a-z, 0-9 หรือ _",
+      true
+    );
+    return;
+  }
+
+  if(password.length<8){
+    notify("รหัสผ่านต้องมีอย่างน้อย 8 ตัว",true);
+    return;
+  }
+
+  if(password!==confirm){
+    notify("รหัสผ่านยืนยันไม่ตรงกัน",true);
+    return;
+  }
+
+  const users=getUsers();
+
+  if(users.some(u=>u.username===username)){
+    notify("Username นี้ถูกใช้แล้ว",true);
+    return;
+  }
+
+  const user={
+    id:uid(),
+    name,
+    username,
+    password,
+    role:"patient",
+    department:null
+  };
+
+  users.push(user);
+  saveUsers(users);
+
+  $("registerForm").reset();
+  sessionStorage.setItem(SESSION_KEY,user.id);
+
+  updateNav();
+  go("dashboard");
+  notify("สมัครสมาชิกสำเร็จ");
+}
+
+function logout(){
+  sessionStorage.removeItem(SESSION_KEY);
+  updateNav();
+  go("home");
+  notify("ออกจากระบบแล้ว");
+}
+
+function book(event){
+  event.preventDefault();
+
+  const user=currentUser();
+  if(!user||user.role!=="patient"){
+    notify("ไม่มีสิทธิ์จองคิว",true);
+    return;
+  }
+
+  const department=$("department").value;
+  const date=$("visitDate").value;
+  const note=$("note").value.trim();
+
+  if(!departments.includes(department)||date<today()){
+    notify("กรุณาตรวจสอบแผนกและวันที่",true);
+    return;
+  }
+
+  const bookings=getBookings();
+
+  const sameDay=bookings.filter(b=>
+    b.department===department&&
+    b.date===date
+  );
+
+  const queueNumber=sameDay.reduce(
+    (max,b)=>Math.max(max,b.queueNumber||0),0
+  )+1;
+
+  bookings.push({
+    id:uid(),
+    patientId:user.id,
+    patientName:user.name,
+    department,
+    date,
+    note,
+    queueNumber,
+    status:"waiting",
+    createdAt:new Date().toISOString()
+  });
+
+  saveBookings(bookings);
+  $("bookingForm").reset();
+  $("visitDate").value=today();
+
+  renderDashboard();
+  notify(
+    "จองคิวสำเร็จ หมายเลขคิว "+queueNumber
+  );
+}
+
+function changeStatus(id,status){
+  const user=currentUser();
+  if(!user)return;
+
+  const bookings=getBookings();
+  const booking=bookings.find(b=>b.id===id);
+  if(!booking)return;
+
+  const isPatient=
+    user.role==="patient"&&
+    booking.patientId===user.id;
+
+  const isStaff=
+    user.role==="admin"||
+    (user.role==="doctor"&&
+     user.department===booking.department);
+
+  const allowed={
+    waiting:["called","cancelled"],
+    called:["examining","cancelled"],
+    examining:["completed"],
+    completed:[],
+    cancelled:[]
+  };
+
+  if(isPatient){
+    if(booking.status!=="waiting"||status!=="cancelled"){
+      return;
+    }
+  }else if(isStaff){
+    if(!allowed[booking.status]?.includes(status)){
+      return;
+    }
+  }else{
+    return;
+  }
+
+  booking.status=status;
+  saveBookings(bookings);
+  renderDashboard();
+  notify("เปลี่ยนสถานะเรียบร้อย");
+}
+
+function el(tag,value){
+  const node=document.createElement(tag);
+  if(value!==undefined)node.textContent=String(value);
+  return node;
+}
+
+function action(parent,label,callback,style=""){
+  const btn=el("button",label);
+  if(style)btn.className=style;
+  btn.addEventListener("click",callback);
+  parent.appendChild(btn);
+}
+
+function renderBookings(bookings,target,manage=false){
+  const root=$(target);
+  root.replaceChildren();
+
+  if(!bookings.length){
+    const empty=el("div","ยังไม่มีรายการจองคิว");
+    empty.className="empty";
+    root.appendChild(empty);
+    return;
+  }
+
+  bookings.sort((a,b)=>
+    a.date.localeCompare(b.date)||
+    a.queueNumber-b.queueNumber
+  );
+
+  for(const booking of bookings){
+    const card=el("div");
+    card.className="item";
+
+    const row=el("div");
+    row.className="row";
+
+    row.appendChild(
+      el("strong","คิวหมายเลข "+booking.queueNumber)
+    );
+
+    const badge=el(
+      "span",
+      statusNames[booking.status]||booking.status
+    );
+    badge.className="badge";
+    row.appendChild(badge);
+    card.appendChild(row);
+
+    card.appendChild(
+      el("p","แผนก: "+booking.department)
+    );
+    card.appendChild(
+      el("p","วันที่: "+booking.date)
+    );
+
+    if(manage){
+      card.appendChild(
+        el("p","ผู้ป่วย: "+booking.patientName)
+      );
+      card.appendChild(
+        el("p","หมายเหตุ: "+(booking.note||"-"))
+      );
+    }
+
+    const actions=el("div");
+    actions.className="actions";
+
+    if(manage){
+      const transitions={
+        waiting:[
+          ["เรียกคิว","called"],
+          ["ยกเลิก","cancelled"]
+        ],
+        called:[
+          ["เริ่มตรวจ","examining"],
+          ["ยกเลิก","cancelled"]
+        ],
+        examining:[
+          ["ตรวจเสร็จ","completed"]
+        ]
+      };
+
+      for(const [label,status] of
+          transitions[booking.status]||[]){
+        action(
+          actions,
+          label,
+          ()=>changeStatus(booking.id,status),
+          status==="cancelled"?"danger":""
+        );
+      }
+    }else if(booking.status==="waiting"){
+      action(
+        actions,
+        "ยกเลิกคิว",
+        ()=>changeStatus(booking.id,"cancelled"),
+        "danger"
+      );
+    }
+
+    card.appendChild(actions);
+    root.appendChild(card);
+  }
+}
+
+function renderUsers(){
+  const root=$("usersList");
+  root.replaceChildren();
+
+  const users=getUsers();
+  const admin=currentUser();
+
+  for(const user of users){
+    const card=el("div");
+    card.className="item";
+
+    card.appendChild(el("strong",user.name));
+    card.appendChild(
+      el("p","Username: "+user.username)
+    );
+    card.appendChild(
+      el("p","บทบาท: "+user.role)
+    );
+
+    if(user.id!==admin.id){
+      const role=el("select");
+
+      for(const [value,label] of [
+        ["patient","ผู้ป่วย"],
+        ["doctor","แพทย์"],
+        ["admin","Admin"]
+      ]){
+        const option=el("option",label);
+        option.value=value;
+        role.appendChild(option);
+      }
+      role.value=user.role;
+
+      
+const dept=el("select");
+
+for(const value of departments){
+  const option=el("option",value);
+  option.value=value;
+  dept.appendChild(option);
+}
+
+dept.value=user.department||departments[0];
+
+const fields=el("div");
+fields.className="grid two";
+fields.append(role,dept);
+card.appendChild(fields);
+
+const buttons=el("div");
+buttons.className="actions";
+
+action(buttons,"บันทึกสิทธิ์",()=>{
+  if(!confirm("ยืนยันการเปลี่ยนสิทธิ์?"))return;
+
+  const all=getUsers();
+  const target=all.find(u=>u.id===user.id);
+  if(!target)return;
+
+  target.role=role.value;
+  target.department=
+    role.value==="doctor"?dept.value:null;
+
+  saveUsers(all);
+  renderDashboard();
+  notify("บันทึกสิทธิ์สำเร็จ");
 });
 
-function today(){
-  const d=new Date();
-  return new Date(d.getTime()-d.getTimezoneOffset()*60000)
-    .toISOString().slice(0,10);
+card.appendChild(buttons);
 }
+
+root.appendChild(card);
+}
+}
+
+function renderDashboard(){
+const user=currentUser();
+
+if(!user){
+  go("login");
+  return;
+}
+
+$("welcome").textContent=
+  "ยินดีต้อนรับ "+user.name+
+  " (@"+user.username+")";
+
+const roleNames={
+  patient:"ผู้ป่วย",
+  doctor:"แพทย์",
+  admin:"ผู้ดูแลระบบ"
+};
+
+$("roleBadge").textContent=roleNames[user.role];
+
+for(const id of [
+  "patientPanel",
+  "doctorPanel",
+  "adminPanel"
+]){
+  $(id).classList.add("hidden");
+}
+
+const bookings=getBookings();
+
+if(user.role==="patient"){
+  $("patientPanel").classList.remove("hidden");
+
+  renderBookings(
+    bookings.filter(b=>b.patientId===user.id),
+    "patientList"
+  );
+}
+
+if(user.role==="doctor"){
+  $("doctorPanel").classList.remove("hidden");
+
+  $("doctorDept").textContent=
+    "แผนกที่รับผิดชอบ: "+user.department;
+
+  renderBookings(
+    bookings.filter(b=>
+      b.department===user.department
+    ),
+    "doctorList",
+    true
+  );
+}
+
+if(user.role==="admin"){
+  $("adminPanel").classList.remove("hidden");
+
+  $("totalCount").textContent=bookings.length;
+
+  $("waitingCount").textContent=
+    bookings.filter(b=>
+      b.status==="waiting"
+    ).length;
+
+  $("doneCount").textContent=
+    bookings.filter(b=>
+      b.status==="completed"
+    ).length;
+
+  renderBookings(
+    bookings,
+    "adminList",
+    true
+  );
+
+  renderUsers();
+}
+}
+
+function clearBookings(){
+if(currentUser()?.role!=="admin")return;
+
+if(!confirm("ลบข้อมูลคิวจำลองทั้งหมด?")){
+  return;
+}
+
+saveBookings([]);
+renderDashboard();
+notify("ล้างข้อมูลคิวแล้ว");
+}
+
+// ========================================
+// FORM EVENTS
+// ========================================
+
+$("loginForm").addEventListener(
+  "submit",
+  login
+);
+
+$("registerForm").addEventListener(
+  "submit",
+  register
+);
+
+$("bookingForm").addEventListener(
+  "submit",
+  book
+);
+
+// ========================================
+// INITIALIZE
+// ========================================
+
+initializeDemo();
 
 $("visitDate").min=today();
 $("visitDate").value=today();
 
-function resetListeners(){
-  unsubs.forEach(fn=>fn());
-  unsubs=[];
-}
+updateNav();
+go("home");
 
-function addText(parent,tag,text){
-  const el=document.createElement(tag);
-  el.textContent=text;
-  parent.appendChild(el);
-  return el;
-}
-
-function renderAppointments(items,target,manage=false){
-  const root=$(target);
-  root.replaceChildren();
-
-  if(!items.length){
-    root.textContent="ยังไม่มีรายการจองคิว";
-    return;
-  }
-
-  items.sort((a,b)=>
-    String(a.date||"").localeCompare(String(b.date||""))
-  );
-
-  items.forEach(a=>{
-    const box=document.createElement("div");
-    box.className="item";
-
-    const header=document.createElement("div");
-    header.className="row";
-    addText(header,"strong","คิว "+a.id.slice(0,8).toUpperCase());
-    const tag=addText(header,"span",a.status);
-    tag.className="tag";
-    box.appendChild(header);
-
-    addText(box,"p","แผนก: "+a.department);
-    addText(box,"p","วันที่: "+a.date);
-
-    if(manage){
-      addText(box,"p","รหัสผู้ป่วย: "+a.patientId);
-      addText(box,"p","หมายเหตุ: "+(a.note||"-"));
-    }
-
-    const actions=document.createElement("div");
-    actions.className="actions";
-
-    const choices=manage
-      ?["เรียกคิว","กำลังตรวจ","เสร็จสิ้น","ยกเลิก"]
-      :["ยกเลิก"];
-
-    choices.forEach(status=>{
-      if(!manage&&a.status!=="รอเรียกคิว")return;
-
-      const btn=document.createElement("button");
-      btn.textContent=status;
-      if(status==="ยกเลิก")btn.className="danger";
-      btn.disabled=["เสร็จสิ้น","ยกเลิก"].includes(a.status);
-
-      btn.onclick=async()=>{
-        try{
-          await updateDoc(doc(db,"appointments",a.id),{status});
-          message("เปลี่ยนสถานะสำเร็จ");
-        }catch(e){
-          message("เกิดข้อผิดพลาด: "+e.message,true);
-        }
-      };
-
-      actions.appendChild(btn);
-    });
-
-    box.appendChild(actions);
-    root.appendChild(box);
-  });
-}
-
-function listen(q,target,manage=false){
-  const off=onSnapshot(q,snapshot=>{
-    const items=snapshot.docs.map(d=>({
-      id:d.id,...d.data()
-    }));
-    renderAppointments(items,target,manage);
-  },e=>message("โหลดข้อมูลไม่สำเร็จ: "+e.message,true));
-
-  unsubs.push(off);
-}
-
-function listenUsers(){
-  const off=onSnapshot(
-    query(collection(db,"users"),limit(100)),
-    snapshot=>{
-      const root=$("userList");
-      root.replaceChildren();
-
-      snapshot.docs.forEach(d=>{
-        const u=d.data();
-        const box=document.createElement("div");
-        box.className="item";
-
-        addText(box,"p",(u.name||"-")+" | "+(u.email||"-"));
-        addText(box,"p","สิทธิ์ปัจจุบัน: "+u.role);
-
-        if(d.id!==currentUser.uid){
-          const role=document.createElement("select");
-
-          [
-            ["patient","ผู้ป่วย"],
-            ["doctor","แพทย์"],
-            ["admin","ผู้ดูแล"]
-          ].forEach(([value,label])=>{
-            const opt=document.createElement("option");
-            opt.value=value;
-            opt.textContent=label;
-            role.appendChild(opt);
-          });
-          role.value=u.role||"patient";
-
-          const dept=document.createElement("select");
-          [
-            "ตรวจโรคทั่วไป",
-            "อายุรกรรม",
-            "ศัลยกรรม",
-            "กุมารเวชกรรม",
-            "ทันตกรรม"
-          ].forEach(value=>{
-            const opt=document.createElement("option");
-            opt.value=value;
-            opt.textContent=value;
-            dept.appendChild(opt);
-          });
-          dept.value=u.department||"ตรวจโรคทั่วไป";
-
-          const btn=document.createElement("button");
-          btn.textContent="บันทึกสิทธิ์";
-
-          btn.onclick=async()=>{
-            if(!confirm("ยืนยันการเปลี่ยนสิทธิ์?"))return;
-
-            try{
-              await updateDoc(doc(db,"users",d.id),{
-                role:role.value,
-                department:role.value==="doctor"?dept.value:""
-              });
-              message("บันทึกสิทธิ์สำเร็จ");
-            }catch(e){
-              message(e.message,true);
-            }
-          };
-
-          box.append(role,dept,btn);
-        }
-        root.appendChild(box);
-      });
-    },
-    e=>message("โหลดบัญชีไม่สำเร็จ: "+e.message,true)
-  );
-  unsubs.push(off);
-}
-
-async function loadDashboard(){
-  resetListeners();
-
-  ["patientPanel","doctorPanel","adminPanel"].forEach(id=>{
-    $(id).classList.add("hidden");
-  });
-
-  if(!currentUser)return;
-
-  const snapshot=await getDoc(doc(db,"users",currentUser.uid));
-
-  if(!snapshot.exists()){
-    message("ไม่พบโปรไฟล์ กรุณาติดต่อผู้ดูแล",true);
-    return;
-  }
-
-  profile=snapshot.data();
-  $("identity").textContent=profile.role;
-  $("welcome").textContent="ยินดีต้อนรับ "+profile.name;
-
-  if(profile.role==="patient"){
-    $("patientPanel").classList.remove("hidden");
-    listen(
-      query(
-        collection(db,"appointments"),
-        where("patientId","==",currentUser.uid)
-      ),
-      "myAppointments"
-    );
-  }
-
-  else if(profile.role==="doctor"){
-    $("doctorPanel").classList.remove("hidden");
-    $("doctorDept").textContent="แผนก: "+profile.department;
-    listen(
-      query(
-        collection(db,"appointments"),
-        where("department","==",profile.department)
-      ),
-      "doctorAppointments",
-      true
-    );
-  }
-
-  else if(profile.role==="admin"){
-    $("adminPanel").classList.remove("hidden");
-    listen(collection(db,"appointments"),"adminAppointments",true);
-    listenUsers();
-  }
-}
-
-$("registerForm").onsubmit=async e=>{
-  e.preventDefault();
-  const btn=e.target.querySelector("button");
-  btn.disabled=true;
-
-  try{
-    const name=$("regName").value.trim();
-    const email=$("regEmail").value.trim();
-    const password=$("regPassword").value;
-
-    if(!name)throw Error("กรุณากรอกชื่อ");
-
-    const result=await createUserWithEmailAndPassword(
-      auth,email,password
-    );
-
-    await updateProfile(result.user,{displayName:name});
-
-    await setDoc(doc(db,"users",result.user.uid),{
-      name,
-      email,
-      role:"patient",
-      department:"",
-      createdAt:serverTimestamp()
-    });
-
-    currentUser=result.user;
-    await loadDashboard();
-    page("dashboard");
-    message("สมัครสมาชิกสำเร็จ");
-  }catch(e){
-    message("สมัครสมาชิกไม่สำเร็จ: "+e.message,true);
-  }finally{
-    btn.disabled=false;
-  }
-};
-
-$("loginForm").onsubmit=async e=>{
-  e.preventDefault();
-  try{
-    await signInWithEmailAndPassword(
-      auth,
-      $("loginEmail").value.trim(),
-      $("loginPassword").value
-    );
-  }catch(e){
-    message("เข้าสู่ระบบไม่สำเร็จ: "+e.message,true);
-  }
-};
-
-$("logout").onclick=()=>signOut(auth);
-
-$("bookingForm").onsubmit=async e=>{
-  e.preventDefault();
-
-  if(!currentUser||profile?.role!=="patient")return;
-
-  const department=$("dept").value;
-  const date=$("visitDate").value;
-  const note=$("note").value.trim();
-
-  if(!department||date<today()){
-    message("กรุณาเลือกแผนกและวันที่ให้ถูกต้อง",true);
-    return;
-  }
-
-  const btn=e.target.querySelector("button");
-  btn.disabled=true;
-
-  try{
-    const ref=await addDoc(collection(db,"appointments"),{
-      patientId:currentUser.uid,
-      department,
-      date,
-      note,
-      status:"รอเรียกคิว",
-      createdAt:serverTimestamp()
-    });
-
-    message(
-      "จองคิวสำเร็จ! หมายเลขอ้างอิง: "+
-      ref.id.slice(0,8).toUpperCase()
-    );
-    $("note").value="";
-  }catch(e){
-    message("จองไม่สำเร็จ: "+e.message,true);
-  }finally{
-    btn.disabled=false;
-  }
-};
-
-onAuthStateChanged(auth,async user=>{
-  const version=++authVersion;
-  resetListeners();
-  currentUser=user;
-  profile=null;
-
-  document.querySelectorAll(".guest").forEach(el=>{
-    el.classList.toggle("hidden",!!user);
-  });
-
-  document.querySelectorAll(".logged").forEach(el=>{
-    el.classList.toggle("hidden",!user);
-  });
-
-  if(user){
-    try{
-      await loadDashboard();
-      if(version!==authVersion)return;
-      page("dashboard");
-    }catch(e){
-      if(version!==authVersion)return;
-      page("home");
-      message("โหลดบัญชีไม่สำเร็จ: "+e.message,true);
-    }
-  }else{
-    page("home");
-  }
-});
 </script>
+
 </body>
 </html>
